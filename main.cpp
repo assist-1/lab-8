@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cmath>
 
 int main() {
     double aim = 3. / 7.;
