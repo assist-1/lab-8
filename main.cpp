@@ -1,6 +1,6 @@
 #include <iostream>
 
-double GCD(double a, double b) { // Алгоритм Евклида для нахождения НОД
+double GCD(double a, double b) {
 	while(a != b) {
 		if(a > b)
 			a -= b;
