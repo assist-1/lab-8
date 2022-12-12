@@ -25,8 +25,6 @@ int main() {
         }
     }
 
-    std::cout << "Answer: \n\n";
-    std::cout << m << "\n------\n" << n << std::endl;
-
+    std::cout << "Answer: " << m << " / " << n << std::endl;
     return 0;
 }
