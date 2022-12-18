@@ -2,8 +2,6 @@
 #include <iostream>
 #include <vector>
 
-uint64_t b_n = 0;
-
 int get_line_number(uint64_t n) {
         return std::ceil((-1 + std::sqrt(1 + 8 * n)) / 2);
 }
@@ -17,22 +15,21 @@ std::vector<bool> eratosthenes(uint64_t n, uint64_t k) {
 	
 	for (uint64_t p = 2; p * p <= k; p++) {
 		for (uint64_t i = p * p; i <= k; i += p)
-			primes[i - n] = false;
+            if (i >= n) primes[i - n] = false;
 	}
 	
 	return primes;
 }
 
-
-
-bool is_suitable(int n, std::vector<bool>& primes, uint64_t first_number, int delta_prev = 0) {
-        if (!primes[n - first_number]) return false;
+bool is_suitable(int n, std::vector<bool>& primes, uint64_t lower_border, uint64_t prev_n = 0) {
+        if (!primes[n - lower_border]) return false;
 
         int line = get_line_number(n);
         bool is_first = n == get_first_number_in_line(line); 
         bool is_last = n == (get_first_number_in_line(line + 1) - 1); 
         bool is_near_last = n == (get_first_number_in_line(line + 1) - 2); 
- 
+        int delta_prev = 0;
+
         std::vector<int> deltas; 
         if (is_first) { 
                 deltas = {line - 1, line - 2, -line, -line - 1}; 
@@ -45,34 +42,37 @@ bool is_suitable(int n, std::vector<bool>& primes, uint64_t first_number, int de
         }
 
         for (int delta: deltas) {
-                if (primes[n - delta - first_number]) {
-                        if (delta_prev and (n - delta != n - delta_prev)) {
-				return true;}
-                        delta_prev = delta;
-                        }
+                if (primes[n - delta - lower_border] && n - delta != prev_n) {
+                    if (delta_prev) return true;
+                    if (prev_n) return true;
+                    delta_prev = delta;
+                    }
                 }
-  
+
         if (!delta_prev) return false;
-        else return is_suitable(n - delta_prev, primes, first_number, delta_prev);
+        else return is_suitable(n - delta_prev, primes, lower_border, n);
 }
 
-void B(int n) {
+uint64_t B(int n) {
+    uint64_t result = 0;
 	uint64_t lower_border = get_first_number_in_line(n - 2);
         uint64_t top_border = get_first_number_in_line(n + 3) - 1;
         std::vector<bool> primes = eratosthenes(lower_border, top_border);
 
         for (uint64_t i = get_first_number_in_line(n); i < get_first_number_in_line(n + 1); ++i) {
                 if (is_suitable(i, primes, lower_border)) {
-                        b_n += i;
+                        result += i;
                 }
         }
+    return result;
 }
 
 int main() {
-    int n;
-	std::cin >> n;
-    B(n);
-    std::cout << b_n << std::endl;
-	return 0;
+    int n1 = 5678027;
+    int n2 = 7208785;
+    uint64_t b_n1 = B(n1);
+    uint64_t b_n2 = B(n2);
+    std::cout << b_n1 + b_n2 << std::endl;
+    return 0;
 }
 
