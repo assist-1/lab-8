@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <cmath>
 
 using std::cin;
@@ -55,9 +55,9 @@ long help(int n) {
     }return res;
 }
 
-long B(int n) {
+unsigned long long B(int n) {
     long start = help(n - 1) + 1;
-    long res = 0;
+    unsigned long long res = 0;
     for (long i = start; i < start + n; i++) {
         if (easy(i)) {
             if (counter(i, n, 2, start) >= 2) res += i;
